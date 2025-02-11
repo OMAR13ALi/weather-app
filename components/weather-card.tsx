@@ -4,13 +4,11 @@ import { useState } from "react"
 import {
   Cloud,
   CloudRain,
-  Search,
   Sun,
   Wind,
   Droplets,
   Thermometer,
   Gauge,
-  Loader2,
   CloudFog,
   CloudLightning,
   CloudSnow,
@@ -18,8 +16,7 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { AutocompleteInput } from "@/components/autocomplete-input"
 
 interface WeatherData {
   name: string
@@ -50,8 +47,7 @@ export function WeatherCard() {
   const [error, setError] = useState("")
   const { theme } = useTheme()
 
-  const fetchWeather = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const fetchWeather = async (city: string) => {
     setLoading(true)
     setError("")
 
@@ -98,19 +94,9 @@ export function WeatherCard() {
           <CardDescription>Enter a city name to get detailed weather information</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={fetchWeather} className="flex gap-2 mb-4">
-            <Input
-              placeholder="Enter city name..."
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="flex-1"
-            />
-            <Button type="submit" disabled={loading}>
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-            </Button>
-          </form>
+          <AutocompleteInput onSearch={fetchWeather} loading={loading} />
 
-          {error && <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md mb-4">{error}</div>}
+          {error && <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md mt-4">{error}</div>}
 
           {weather && (
             <div className="space-y-6">
